@@ -18,8 +18,8 @@
 
 #### Gems to be collect
 ---------------------------
-![Gem Green]("images/Gem Green.png")
-![Gem Orange](images/"Gem Orange".png)
+![Gem Green](images/Gem%20Green.png)
+![Gem Orange](images/Gem%20Orange.png)
 ![Gem Blue](images/Gem%20Blue.png)
 
 #### Extra lifes
