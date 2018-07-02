@@ -20,7 +20,7 @@
 ---------------------------
 ![Gem Green]("images/Gem Green.png")
 ![Gem Orange](images/"Gem Orange".png)
-![Gem Blue](images/"Gem%20Blue.png)
+![Gem Blue](images/Gem%20Blue.png)
 
 #### Extra lifes
 --------------------------
