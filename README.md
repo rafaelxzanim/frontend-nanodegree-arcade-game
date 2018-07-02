@@ -6,11 +6,11 @@
 
 #### Characters Avaliable
 ----------------------------
-![boy](images/char-boy.png)
-![cat-girl](images/char-cat-girl.png)
-![horn-girl](images/char-horn-girl.png)
-![pink-girl](images/char-pink-girl.png)
-![princess-girl](images/char-princess-girl.png)
+![char-boy](images/char-boy.png)
+![char-cat-girl](images/char-cat-girl.png)
+![char-horn-girl](images/char-horn-girl.png)
+![char-pink-girl](images/char-pink-girl.png)
+![char-princess-girl](images/char-princess-girl.png)
 
 #### Enemies to avoid
 ----------------------------
@@ -18,9 +18,9 @@
 
 #### Gems to be collect
 ---------------------------
-![Gem Green](images/Gem Green.png)
-![Gem Orange](images/Gem Orange.png)
-![Gem Blue](images/Gem Blue.png)
+![Gem Green](images/"Gem Green.png")
+![Gem Orange](images/"Gem Orange.png")
+![Gem Blue](images/"Gem Blue.png")
 
 #### Extra lifes
 --------------------------
@@ -40,5 +40,3 @@
 - Hearts give you extra lifes
 - Rocks stop you 
 - The game has 21 levels
-
-
