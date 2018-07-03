@@ -1,6 +1,7 @@
 # frontend-nanodegree-arcade-game
 ### about the game
 - The main goal of this game is cross the road avoiding enemies who are represent by bugs. 
+`<Try Online>` : <https://xvossx.github.io/frontend-nanodegree-arcade-game/>
 
 ### about the visual aspects
 
@@ -34,7 +35,7 @@
 ----------------------------
 - Open ```index.html```
 - Choose your avatar player
-- Try to reach the other side of the road
+- Try to reach the other side of the road using the arrow keys to move the player
 - Avoid the bugs 
 - Try to complete the GEM STATUS
 - Hearts give you extra lifes
