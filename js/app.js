@@ -1,5 +1,7 @@
+"use strict";
+
 // Enemies our player must avoid
-let Enemy = function(x,y,speed) {
+const Enemy = function(x,y,speed) {
     // Variables applied to each of our instances go here,
     // we've provided one for you to get started
 
@@ -9,7 +11,7 @@ let Enemy = function(x,y,speed) {
     this.x = x;
     this.y = y;
     this.speed = speed;
-}
+};
 
 // Update the enemy's position, required method for game
 // Parameter: dt, a time delta between ticks
@@ -19,58 +21,75 @@ Enemy.prototype.update = function(dt) {
     // all computers.
     this.x +=this.speed * dt;
     
+    this.checkBorders();
+
+    this.checkCollisions();
+    
+};
+
+Enemy.prototype.checkBorders = function() {
     ///Check if the enemy is outside the "screen" and reset X
     if (this.x>900){
         this.x = -50;
         this.speed = getRandomArbitrary(150,350);
     }
-    
+};
+
+Enemy.prototype.checkCollisions = function() {
     ///Check if player is in the same position that the enemy is
     ///In this case player will lost 1 life
     ///If life is equal 0 the game will restart
     if (
-          (player.y==this.y) && 
-          (              
-              player.x<Math.round(this.x)+80
-              &&
-              player.x>Math.round(this.x)-30
-          )
-       ){
-        player.y=380;        
-        player.lifecounter--;
-        if (player.lifecounter==0)  {
-            alert("GAME OVER =(. BEST LUCK NEXT TIME =)");
-            game.changeLevel(0);
-        }
-    }
-}
+        (player.y==this.y) && 
+        (player.x<Math.round(this.x)+80 && player.x>Math.round(this.x)-30)
+     ){
+      player.y=380;        
+      player.lifecounter--;
+      if (player.lifecounter===0)  {
+          alert("GAME OVER =(. BEST LUCK NEXT TIME =)");
+          game.changeLevel(0);
+      }
+  }    
+};
 
 // Draw the enemy on the screen, required method for game
 Enemy.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
-}
+};
 
 // Now write your own player class
 // This class requires an update(), render() and
 // a handleInput() method.
 
-let Player = function(x,y,speed,sprite) {
+const Player = function(x,y,speed,sprite) {
      this.x = x;
      this.y = y;
      this.speed = speed;
      this.sprite = sprite;
      this.lifecounter = 3;     
-}
+};
 
 Player.prototype.addLife = function(life){
     this.lifecounter += life;
-}
+};
 
 Player.prototype.changeAvatar = function(newAvatar) {
     this.sprite = newAvatar;
-}
+};
 
 Player.prototype.update = function() {
+
+    this.checkBorders();
+
+    this.checkLifePosition();
+
+    this.checkGemsPositions();
+
+    document.getElementById("lifecounter").innerHTML = `LIFE: ${this.lifecounter}`;   
+
+};
+
+Player.prototype.checkBorders = function() {
     ///Check if player is outside the screen in Y position
     if (this.y<0 || this.y > 380){   
         if(this.y<0) {
@@ -85,24 +104,28 @@ Player.prototype.update = function() {
     } else if(this.x > 900) {
         this.x = 900 ;
     }
+};
 
-    ///If player has the same X/Y position than life will be add one more life to the player
+Player.prototype.checkLifePosition = function() {
+///If player has the same X/Y position than life will be add one more life to the player
    if ( (this.y==life.y) && (this.x==life.x)){       
-       if (life_control===0){
-        this.addLife(1);
-        life_control=1;
-        life.x=-100;
-        life.y=-100;
-       }
-       return;
-   };
+        if (life_control===0){
+            this.addLife(1);
+            life_control=1;
+            life.x=-100;
+            life.y=-100;
+        }   
+        return;
+    }
+};
 
-    ///If player has the same X/Y position than GEMS[S] will be highlight the name of GEM
+Player.prototype.checkGemsPositions = function() {
+///If player has the same X/Y position than GEMS[S] will be highlight the name of GEM
    if (this.x==gemblue.x && this.y==gemblue.y){  
         $("#gemblue").addClass("gemactive");
         gemblue.x=-100;
         gemblue.y=-100; 
-   };
+    }
 
     if (this.x==gemgreen.x && this.y==gemgreen.y){
         $("#gemgreen").addClass("gemactive");
@@ -115,122 +138,109 @@ Player.prototype.update = function() {
         gemorange.x=-100;
         gemorange.y=-100; 
     }
-
-    document.getElementById("lifecounter").innerHTML = `LIFE: ${player.lifecounter}`;   
-}
+};
 
 Player.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
-}
+};
+
+Player.prototype.checkRocksPositions = function(item,  index, keycode) {
+
+    if (keycode==='right'){
+            if (((this.x + this.speed + 50)===item.x) && (this.y==item.y)){                           
+                return true;
+            }                
+        } else if (keycode==='left'){
+            if (((this.x - (this.speed + 50))===item.x) && (this.y==item.y)) {                       
+                return true;
+            }
+        } else if (keycode === 'up'){
+            if (((this.y - (this.speed + 30))===item.y) && (this.x==item.x)){                      
+                 return true;
+            }        
+        } else if (keycode === 'down'){
+
+            if (((this.y + this.speed + 30)===item.y) && (this.x==item.x)) {                            
+                return true;
+            }
+        }     
+        return false;
+};
 
 Player.prototype.handleInput = function(keycode) {
 
-    let control=Boolean(false);
-            
-    allRocks.forEach(checkRockPos);
+    let control=[];
+    ///check if the next keycode movement will have any rock
+    ///the results will be store in control array. after that will search if exist any true result
+    ///if true doesn´t move play otherwise move according keycode
+    allRocks.forEach(function(value, index) {
+        control[index]=this.checkRocksPositions(value, index, keycode); 
+        },this);
+    let control_temp  = control.indexOf(true);
 
-    ///Before moving player will check if the position X/Y will be a rock
-    ///If true then doesn´t move player
-    function checkRockPos(item, index, arr) {
-
-     if (keycode==='right'){
-        if (((player.x + player.speed + 50)===item.x) && (player.y==item.y)) {
-            //control=1;
-            control=Boolean(true);
-            //console.log('will be the same in the RIGHT');
-            return false;
-        }                
-    } else if (keycode==='left'){
-        if (((player.x - (player.speed + 50))===item.x) && (player.y==item.y)) {
-            //control=1;
-            control=Boolean(true);
-            //console.log('will be the same in the LEFT');
-            return false;
-        }
-    } else if (keycode === 'up'){
-        if (((player.y - (player.speed + 30))===item.y) && (player.x==item.x)) {
-            //control=1;
-            control=Boolean(true);
-            //console.log('will be the same in the UP');
-            return false;
-        }        
-    } else if (keycode === 'down'){
-
-        if (((player.y + player.speed + 30)===item.y) && (player.x==item.x)) {
-            //control=1;
-            control=Boolean(true);
-            //console.log('will be the same in the DOWN');
-            return false;
-        }
-    } 
-}
-
-    ///If control is false then player will move according keycode
-    if (keycode==='right' && control===false){
+    ///If control is still false then player will move according keycode
+    if (keycode==='right' && control_temp===-1){
         this.x += this.speed + 50;
                 
-    } else if (keycode==='left' && control===false){
+    } else if (keycode==='left' && control_temp===-1){
         this.x -= this.speed + 50;
 
-    } else if (keycode === 'up' && control===false){
+    } else if (keycode === 'up' && control_temp===-1){
         this.y -= this.speed + 30;
         
-    } else if (keycode === 'down' && control===false){
+    } else if (keycode === 'down' && control_temp===-1){
             this.y += this.speed + 30;
     }   
-}
+};
 
-Player.prototype.getSprite = function(){
-    return this.sprite;
-}
-
-//gem class 
-let Gem = function(x,y,sprite){
+///Create gem class 
+const Gem = function(x,y,sprite){
     this.x = x;
     this.y = y;
     this.sprite = sprite;
-}
+};
 
 Gem.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
-}
+};
 
-//life class
-let Life = function (x,y,sprite){
+///Create life class
+const Life = function (x,y,sprite){
   this.x=x;
   this.y=y;
   this.sprite=sprite;
-}
+};
 
 Life.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
-}
+};
 
-let Rock = function (x,y,sprite){
+const Rock = function (x,y,sprite){
     this.x=x;
     this.y=y;
     this.sprite=sprite;
-}
+};
   
+///Create rock class
 Rock.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);      
-}
+};
   
-let Game = function (){
+const Game = function (){
     this.level=0;
-}
+};
 
 Game.prototype.resetGame = function(){
         this.level=0;
-        allEnemies = [];
-        allRocks = [];
+        allEnemies.length=0;
+        allRocks.length=0;
         player.x=0;
         player.y=380;
         player.lifecounter = 3;
         $("#gemblue").removeClass("gemactive");
         $("#gemgreen").removeClass("gemactive");
         $("#gemorange").removeClass("gemactive");
-}
+};
 
 Game.prototype.changeLevel = function (levelx){    
     
@@ -247,14 +257,14 @@ Game.prototype.changeLevel = function (levelx){
     
     ///Add rocks
     if ((this.level%2)===0){
-        allRocks.push(new Rock(randAllPositions[0]["posx"],randAllPositions[0]["posy"],'images/Rock.png'));
+        allRocks.push(new Rock(randAllPositions[0].posx,randAllPositions[0].posy,'images/Rock.png'));
         randAllPositions.shift();
     }
 
-    ///Add Life
+    ///show Life
     if ((this.level%4)===0){        
-        life.x=randAllPositions[0]["posx"];
-        life.y=randAllPositions[0]["posy"];
+        life.x=randAllPositions[0].posx;
+        life.y=randAllPositions[0].posy;
         randAllPositions.shift();
     } 
     else
@@ -263,10 +273,10 @@ Game.prototype.changeLevel = function (levelx){
         life.y=-100;
     }
 
-    ///Add Blue GEM
+    ///show Blue GEM
     if (this.level===7){                                    
-        gemblue.x=randAllPositions[0]["posx"];
-        gemblue.y=randAllPositions[0]["posy"];
+        gemblue.x=randAllPositions[0].posx;
+        gemblue.y=randAllPositions[0].posy;
         randAllPositions.shift();
     } 
     else
@@ -275,10 +285,10 @@ Game.prototype.changeLevel = function (levelx){
         gemblue.y=-100;
     }    
 
-    ///Add Green GEM
+    ///show Green GEM
     if (this.level===14){                        
-        gemgreen.x=randAllPositions[0]["posx"];
-        gemgreen.y=randAllPositions[0]["posy"];
+        gemgreen.x=randAllPositions[0].posx;
+        gemgreen.y=randAllPositions[0].posy;
         randAllPositions.shift();        
     } 
     else
@@ -287,10 +297,10 @@ Game.prototype.changeLevel = function (levelx){
         gemgreen.y=-100;
     }  
 
-    ///Add Orange GEM
+    ///show Orange GEM
     if (this.level===21){                  
-        gemorange.x=randAllPositions[0]["posx"];
-        gemorange.y=randAllPositions[0]["posy"];
+        gemorange.x=randAllPositions[0].posx;
+        gemorange.y=randAllPositions[0].posy;
         randAllPositions.shift();        
     } 
     else
@@ -306,16 +316,16 @@ Game.prototype.changeLevel = function (levelx){
         return true;
     }
 
-}
+};
 
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
 
-let game = new Game(0);
+const game = new Game(0);
 document.getElementById("level").innerHTML = `LEVEL: ${game.level} \n`;   
 
-let allXPositions = [0,100,200,300,400,500,600,700,800,900];
-let allYPositions = [60,140,220];
+const allXPositions = [0,100,200,300,400,500,600,700,800,900];
+const allYPositions = [60,140,220];
 
 function getRandomXPosition(){
    return allXPositions[Math.floor((Math.random() * 10))];
@@ -327,13 +337,11 @@ function getRandomYPosition(){
  
 let allPositions = [];
 ///Create an array with all X/Y combinations so this way the game will never have rock/life/gem in the same position
-for(let i = 0; i < allXPositions.length; i++)
-{
-     for(let j = 0; j < allYPositions.length; j++)
-     {      
+for(let i = 0; i < allXPositions.length; i++) {
+     for(let j = 0; j < allYPositions.length; j++) {      
         let temp = [];      
-        temp["posx"]=allXPositions[i];
-        temp["posy"]=allYPositions[j];
+        temp.posx=allXPositions[i];
+        temp.posy=allYPositions[j];
         allPositions.push(temp);
      }
 }
@@ -357,22 +365,22 @@ function shuffle(array) {
     return array;
 }
 
-//Random the position, so each game will have different ROCK/LIFE/GEM positions
-let randAllPositions = shuffle(allPositions);
+//Random the position, so each game will have different ROCK/LIFE/GEM X/Y positions
+const randAllPositions = shuffle(allPositions);
 
 function getRandomArbitrary(min, max) {
     return Math.random() * (max - min) + min;
 }
 
 let life_control=0;
-let allEnemies = [];
-let allRocks = [];
-let player = new Player(0,380,50,'images/char-boy.png',3);
-let life = new Life(-100,-100,'images/Heart.png');
-let gemblue = new Gem(-100,-100,'images/Gem Blue.png');
-let gemgreen = new Gem(-100,-100,'images/Gem Green.png');
-let gemorange = new Gem(-100,-100,'images/Gem Orange.png');
-allGems = [gemblue,gemgreen,gemorange];
+const allEnemies = [];
+const allRocks = [];
+const player = new Player(0,380,50,'images/char-boy.png',3);
+const life = new Life(-100,-100,'images/Heart.png');
+const gemblue = new Gem(-100,-100,'images/Gem Blue.png');
+const gemgreen = new Gem(-100,-100,'images/Gem Green.png');
+const gemorange = new Gem(-100,-100,'images/Gem Orange.png');
+const allGems = [gemblue,gemgreen,gemorange];
 
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.

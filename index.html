@@ -6,48 +6,39 @@
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>  
-    
-    
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>      
 </head>
 <body>
-
-        <div class="container">             
-                <!-- Modal -->
-                <div class="modal fade" id="myModal" role="dialog" data-backdrop="static" data-keyboard="false">
-                  <div class="modal-dialog">
-                  
-                    <!-- Modal content-->
-                    <div class="modal-content">
-                      <div class="modal-header">
+    <div class="container">             
+    <!-- Modal -->
+        <div class="modal fade" id="myModal" role="dialog" data-backdrop="static" data-keyboard="false">
+            <div class="modal-dialog">                  
+            <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
                         <!--<button type="button" class="close" data-dismiss="modal">&times;</button>-->
                         <h4 class="modal-title">frontend-nanodegree-arcade-game</h4>
-                      </div>
-                      <div class="modal-body">
+                    </div>
+                    <div class="modal-body">
                         <p>Choose an avatar player</p>
 
                         <div id="avatar">        
-                                <img src="images/char-boy.png" class="playersprite active" onclick="changePlayerSprite(this.src);"></img>
-                                <img src="images/char-cat-girl.png" class="playersprite" onclick="changePlayerSprite(this.src);"></img>
-                                <img src="images/char-horn-girl.png" class="playersprite" onclick="changePlayerSprite(this.src);"></img>
-                                <img src="images/char-pink-girl.png" class="playersprite" onclick="changePlayerSprite(this.src);"></img>
-                                <img src="images/char-princess-girl.png" class="playersprite" onclick="changePlayerSprite(this.src);"></img>
+                            <img src="images/char-boy.png" alt="Boy" class="playersprite active" onclick="changePlayerSprite(this.src);">
+                            <img src="images/char-cat-girl.png" alt=" Cat Girl" class="playersprite" onclick="changePlayerSprite(this.src);">
+                            <img src="images/char-horn-girl.png" alt="Horn Girl" class="playersprite" onclick="changePlayerSprite(this.src);">
+                            <img src="images/char-pink-girl.png" alt="Pink Girl" class="playersprite" onclick="changePlayerSprite(this.src);">
+                            <img src="images/char-princess-girl.png" alt="Princess Girl" class="playersprite" onclick="changePlayerSprite(this.src);">
                         </div>
 
                       </div>
-                      <div class="modal-footer">
-                            
+                      <div class="modal-footer">                            
                         <button type="button" class="btn btn-default" data-dismiss="modal" onclick="game.changeLevel();">Start</button>
                       </div>
                     </div>
                     
                   </div>
                 </div>
-              </div>
-
-
-        
-    
+              </div>    
 
         <h2>frontend-nanodegree-arcade-game</h2>
         <div class="row" style="text-align:center">
@@ -59,7 +50,6 @@
                       </div>
                       <div class="col-sm-4 header" style="text-align:left;">
                           <div class="row">
-
                                 <div class="col-sm-3 header">
                                     <div>GEMS STATUS:</div> 
                                 </div>
@@ -73,86 +63,59 @@
 
                                 <div class="col-sm-3 header">
                                     <div id="gemorange" class="gem">ORANGE</div>  
-                                </div>
-                                                                                                                                                
-                                </div>
-                          </div>
-                            
-                      </div>
-        </div>
-        
-        
-        <!--<div id="resultado"></div>-->
-        <!--<div id="player"></div>-->
-        
-        <!--
-        <div id="enemy1"></div>
-        <div id="enemy2"></div>
-        <div id="enemy3"></div>    
-        <div id="enemy4"></div>  
-        <div id="enemy5"></div>  
-        <div id="enemy6"></div>  
-        <div id="enemy7"></div>  
-        -->
-
-        <!--<div id="rock">ROCKS</div> -->
+                                </div>                                                                                                                                                
+                            </div>
+                        </div>                            
+                    </div>        
     
     <script src="js/resources.js"></script>
     <script src="js/app.js"></script>
     <script src="js/engine.js"></script>
-    <script src="js/show.js"></script>    
 
     <div class="row">
         <div class="col-sm-12">
                 <button onclick="game.changeLevel(0);">Reset Game</button>
-        </div>
-        
+        </div>    
     </div>
     
-
-    
-    
-
-    <script>
-            function changePlayerSprite(newAvatar){                
-                let posInit = newAvatar.indexOf("images/");                        
-                player.changeAvatar(newAvatar.substr(posInit));                            
-            }                              
-    </script>
+<script>
+    function changePlayerSprite(newAvatar){                
+        let posInit = newAvatar.indexOf("images/");                        
+        player.changeAvatar(newAvatar.substr(posInit));                            
+    }                              
+</script>
 
 <script>
-        $(document).ready(function(){
-            // Show the Modal on load
-            $("#myModal").modal("show");
+    $(document).ready(function(){
+// Show the Modal on load
+        $("#myModal").modal("show");
             
-            // Hide the Modal
-            $("#myBtn").click(function(){
-                //$("#myModal").modal("hide");
-                $("#myModal").modal({
-                        backdrop: 'static',
-                        keyboard: false
-                    });                
-            });
+// Hide the Modal
+        $("#myBtn").click(function(){
+//$("#myModal").modal("hide");
+            $("#myModal").modal({
+                backdrop: 'static',
+                keyboard: false
+            });                
         });
-        </script>
+    });
+</script>
         
-
-
 <script>
-    // Get the container element
-var btnContainer = document.getElementById("avatar");
+// Get the container element
+    var btnContainer = document.getElementById("avatar");
 
 // Get all buttons with class="btn" inside the container
-var btns = btnContainer.getElementsByClassName("playersprite");
+    var btns = btnContainer.getElementsByClassName("playersprite");
 
 // Loop through the buttons and add the active class to the current/clicked button
-for (var i = 0; i < btns.length; i++) {
-  btns[i].addEventListener("click", function() {
-    var current = document.getElementsByClassName("active");
-    current[0].className = current[0].className.replace(" active", "");
-    this.className += " active";
-  });
-}
+    for (var i = 0; i < btns.length; i++) {
+        btns[i].addEventListener("click", function() {
+            var current = document.getElementsByClassName("active");
+            current[0].className = current[0].className.replace(" active", "");
+            this.className += " active";
+        });
+    }
 </script>        
 
 </body>
